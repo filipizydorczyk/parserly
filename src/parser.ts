@@ -1,8 +1,10 @@
-import { MarkdownElement } from "./element";
+import { MarkdownElement, TextMarkdownElement } from "./element";
 import {
     DefaultMarkdownElementsFactory,
     MarkdownElementsFactory,
 } from "./factory";
+
+const MARKDOWN_HEADER_REGEX = /(?<=(^#)\s).*/;
 
 export class MarkdownParser<CreateType = MarkdownElement> {
     private factory: MarkdownElementsFactory<CreateType>;
@@ -20,14 +22,17 @@ export class MarkdownParser<CreateType = MarkdownElement> {
     parse(markdown: string) {
         const response: CreateType[] = [];
 
-        // some parsing being done
-        // foreach parsed part
+        markdown.split("\n").forEach((line) => {
+            if (MARKDOWN_HEADER_REGEX.test(line)) {
+                const element: TextMarkdownElement = {
+                    type: "h1",
+                    content: line.replace("#", "").trim(),
+                };
 
-        // const parsed: LinkMarkdownElement = { title: "Lol", url: new URL("") };
-        // response.push(this.factory.createLink(parsed));
+                response.push(this.factory.createTxt(element));
+            }
+        });
 
         return response;
     }
 }
-
-// MarkdownParser.defaultParser()
