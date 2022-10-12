@@ -23,7 +23,11 @@ export type TextMarkdownElement = {
 };
 
 export type ParagraphMarkdownElement = {
-    content: TextMarkdownElement[];
+    content: (
+        | TextMarkdownElement
+        | LinkMarkdownElement
+        | ImageMarkdownElement
+    )[];
 };
 
 export type HorizontalRuleMarkdownElement = "---";

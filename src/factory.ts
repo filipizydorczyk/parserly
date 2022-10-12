@@ -20,7 +20,7 @@ export class DefaultMarkdownElementsFactory implements MarkdownElementsFactory<M
     createLink(element: LinkMarkdownElement) { return element; }
     createImg(element: ImageMarkdownElement) { return element; }
     createTxt(element: TextMarkdownElement) { return element; }
-    createHRule(element: "---") { return element; }
+    createHRule(element: HorizontalRuleMarkdownElement) { return element; }
     createParagraph(element: ParagraphMarkdownElement) { return element; }
 }
 /* prettier-ignore-end */
