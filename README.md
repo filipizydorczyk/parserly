@@ -9,7 +9,7 @@ So far these are elements that will be supported/are supported by the library. I
 | Heading         | # H1, ## H2, ### H3                                    | ✅    |
 | Bold            | \*\*bold text\*\*                                      | ❌    |
 | Italic          | \*italicized text\*                                    | ❌    |
-| Blockquote      | > blockquote                                           | ❌    |
+| Blockquote      | > blockquote                                           | ✅    |
 | Ordered List    | 1. First item </br> 2. Second item </br> 3. Third item | ❌    |
 | Unordered List  | - First item </br> - Second item </br> - Third item    | ❌    |
 | Code            | \`code\`                                               | ❌    |

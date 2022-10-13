@@ -1,4 +1,8 @@
-import { MarkdownElement, TextMarkdownElement } from "./element";
+import {
+    ImageMarkdownElement,
+    MarkdownElement,
+    TextMarkdownElement,
+} from "./element";
 import {
     DefaultMarkdownElementsFactory,
     MarkdownElementsFactory,
@@ -8,6 +12,9 @@ const H1_REGEX = /(?<=(^#)\s).*/;
 const H2_REGEX = /(?<=(^##)\s).*/;
 const H3_REGEX = /(?<=(^###)\s).*/;
 const HORIZONTAL_RULE_REGEX = /^(-|_){3,}$/;
+const QUOTE_REGEX = /(?<=(^>)\s).*/;
+const IMG_REGEX = /^!\[[^\]]*\]\((.*?)\s*("(?:.*[^"])")?\s*\)$/;
+const INLINE_IMG_REGEX = /!\[[^\]]*\]\((.*?)\s*("(?:.*[^"])")?\s*\)/;
 
 export class MarkdownParser<CreateType = MarkdownElement> {
     private factory: MarkdownElementsFactory<CreateType>;
@@ -42,9 +49,42 @@ export class MarkdownParser<CreateType = MarkdownElement> {
                 response.push(this.factory.createHRule("---"));
                 return;
             }
+            if (QUOTE_REGEX.test(line)) {
+                response.push(this.parseQuote(line));
+                return;
+            }
+            // TODO: make sure its just an image line not parapgraph
+            if (IMG_REGEX.test(line.trim())) {
+                response.push(this.factory.createImg(this.parseImg(line)));
+                return;
+            }
+            if (line && line.trim().length > 0) {
+                // This also will fetch images but onlin inline
+                this.parseParagraph(line);
+                return;
+            }
         });
 
         return response;
+    }
+
+    private parseParagraph(line: string) {}
+
+    private parseImg(line: string) {
+        const markdownElement = line.trim();
+
+        const altRegex = /(?<=\[)[^\]]+/;
+        const srcRegex = /(?<=\()[^\)]+/;
+
+        const altText = altRegex.exec(markdownElement)?.[0]?.trim() || "";
+        const src = srcRegex.exec(markdownElement)?.[0]?.trim() || "";
+
+        const element: ImageMarkdownElement = {
+            alt: altText,
+            url: new URL(src),
+        };
+
+        return element;
     }
 
     private parseHeader(header: "h1" | "h2" | "h3", line: string) {
@@ -53,6 +93,14 @@ export class MarkdownParser<CreateType = MarkdownElement> {
             content: line.replace(/^#{1,3}/g, "").trim(),
         };
 
+        return this.factory.createTxt(element);
+    }
+
+    private parseQuote(line: string) {
+        const element: TextMarkdownElement = {
+            type: "blockquote",
+            content: line.replace(/^>/g, "").trim(),
+        };
         return this.factory.createTxt(element);
     }
 }
