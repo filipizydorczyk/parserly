@@ -14,7 +14,12 @@ const H3_REGEX = /(?<=(^###)\s).*/;
 const HORIZONTAL_RULE_REGEX = /^(-|_){3,}$/;
 const QUOTE_REGEX = /(?<=(^>)\s).*/;
 const IMG_REGEX = /^!\[[^\]]*\]\((.*?)\s*("(?:.*[^"])")?\s*\)$/;
-const INLINE_IMG_REGEX = /!\[[^\]]*\]\((.*?)\s*("(?:.*[^"])")?\s*\)/;
+
+const INLINE_IMG_REGEX = /\s+!\[[^\]]*\]\((.*?)\s*("(?:.*[^"])")?\s*\)/;
+const LINK_REGEX = /\s+\[[^\]]*\]\((.*?)\s*("(?:.*[^"])")?\s*\)/;
+const BOLD_REGEX = /\*\*([^\s]*?)\*\*/;
+const ITALIC_REGEX = /\s+\*([^\s \*]+)\*/;
+const CODE_REGEX = /\s+\`(.*)\`/;
 
 export class MarkdownParser<CreateType = MarkdownElement> {
     private factory: MarkdownElementsFactory<CreateType>;
@@ -53,7 +58,6 @@ export class MarkdownParser<CreateType = MarkdownElement> {
                 response.push(this.parseQuote(line));
                 return;
             }
-            // TODO: make sure its just an image line not parapgraph
             if (IMG_REGEX.test(line.trim())) {
                 response.push(this.factory.createImg(this.parseImg(line)));
                 return;
@@ -68,7 +72,13 @@ export class MarkdownParser<CreateType = MarkdownElement> {
         return response;
     }
 
-    private parseParagraph(line: string) {}
+    private parseParagraph(line: string) {
+        // IDEA: https://bobbyhadz.com/blog/javascript-split-string-by-regex make regex finding space befroe wanted elements and split by them
+        // Then use actuall regexes to extract the content
+        // IDEA: just split by spaces and try match to markdown element. If its not any of supported element collect it as default text and when u find
+        // markdown element parse it and add to response text u fetched sp far and parsed element (["collected test",Link])
+        // also consider adding perfomance tests
+    }
 
     private parseImg(line: string) {
         const markdownElement = line.trim();

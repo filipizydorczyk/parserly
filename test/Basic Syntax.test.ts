@@ -1,6 +1,5 @@
 import assert from "assert";
 import "mocha";
-import { ImageMarkdownElement } from "../src";
 import { MarkdownParser } from "../src/parser";
 import { withTestFile } from "./utils";
 
@@ -19,12 +18,15 @@ describe("Basic Syntax.md", () => {
                 "---",
                 {
                     alt: "",
-                    // TODO: think of better way to compare URL instances
-                    url: (response[6] as ImageMarkdownElement).url,
+                    url: new URL(
+                        "https://images.news18.com/ibnlive/uploads/2021/12/spiderman-meme-16401651614x3.png"
+                    ),
                 },
                 {
                     alt: "alt text",
-                    url: (response[7] as ImageMarkdownElement).url,
+                    url: new URL(
+                        "https://images.news18.com/ibnlive/uploads/2021/12/spiderman-meme-16401651614x3.png"
+                    ),
                 },
             ]);
         });
