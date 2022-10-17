@@ -1,6 +1,9 @@
 import {
     ImageMarkdownElement,
+    InlineMarkdownElement,
+    LinkMarkdownElement,
     MarkdownElement,
+    ParagraphMarkdownElement,
     TextMarkdownElement,
 } from "./element";
 import {
@@ -17,8 +20,8 @@ const IMG_REGEX = /^!\[[^\]]*\]\((.*?)\s*("(?:.*[^"])")?\s*\)$/;
 
 const INLINE_IMG_REGEX = /\s+!\[[^\]]*\]\((.*?)\s*("(?:.*[^"])")?\s*\)/;
 const LINK_REGEX = /\s+\[[^\]]*\]\((.*?)\s*("(?:.*[^"])")?\s*\)/;
-const BOLD_REGEX = /\*\*([^\s]*?)\*\*/;
-const ITALIC_REGEX = /\s+\*([^\s \*]+)\*/;
+const BOLD_REGEX = /^\*\*([^\s]*?)\*\*$/;
+const ITALIC_REGEX = /^\*([^\s]*?)\*$/;
 const CODE_REGEX = /\s+\`(.*)\`/;
 
 export class MarkdownParser<CreateType = MarkdownElement> {
@@ -63,8 +66,9 @@ export class MarkdownParser<CreateType = MarkdownElement> {
                 return;
             }
             if (line && line.trim().length > 0) {
-                // This also will fetch images but onlin inline
-                this.parseParagraph(line);
+                response.push(
+                    this.factory.createParagraph(this.parseParagraph(line))
+                );
                 return;
             }
         });
@@ -73,11 +77,50 @@ export class MarkdownParser<CreateType = MarkdownElement> {
     }
 
     private parseParagraph(line: string) {
-        // IDEA: https://bobbyhadz.com/blog/javascript-split-string-by-regex make regex finding space befroe wanted elements and split by them
-        // Then use actuall regexes to extract the content
-        // IDEA: just split by spaces and try match to markdown element. If its not any of supported element collect it as default text and when u find
-        // markdown element parse it and add to response text u fetched sp far and parsed element (["collected test",Link])
-        // also consider adding perfomance tests
+        const parts: InlineMarkdownElement[] = [];
+        line.split(" ").forEach((part) => {
+            if (BOLD_REGEX.test(part)) {
+                // TODO figure wat to parse bolds with spaces inside
+                // you can combine regexes with ()|() like: (\*\*([^\s]*?)\*\*)|(\*([^\s]*?)\*)|(\s+\[[^\]]*\]\((.*?)\s*("(?:.*[^"])")?\s*\))
+                // and collect space before and after the match "(?<=[_]).*(?=[\.])". Then do split
+                // https://www.regular-expressions.info/lookaround.html
+                // parts.push(this.factory.createTxt(this.parseBoldText(part)));
+                parts.push(this.parseBoldText(part));
+                return;
+            }
+            if (ITALIC_REGEX.test(part)) {
+                parts.push(this.parseItalicText(part));
+                return;
+            }
+            if (part && part.trim().length > 0) {
+                const element: TextMarkdownElement = {
+                    type: "normal",
+                    content: part.trim(),
+                };
+                parts.push(element);
+                return;
+            }
+        });
+
+        return { content: parts };
+    }
+
+    private parseBoldText(word: string) {
+        const element: TextMarkdownElement = {
+            type: "bold",
+            content: word.replace(/^\*\*/, "").replace(/\*\*$/, ""),
+        };
+
+        return element;
+    }
+
+    private parseItalicText(word: string) {
+        const element: TextMarkdownElement = {
+            type: "italic",
+            content: word.replace(/^\*/, "").replace(/\*$/, ""),
+        };
+
+        return element;
     }
 
     private parseImg(line: string) {

@@ -22,12 +22,13 @@ export type TextMarkdownElement = {
     content: string;
 };
 
+export type InlineMarkdownElement =
+    | TextMarkdownElement
+    | LinkMarkdownElement
+    | ImageMarkdownElement;
+
 export type ParagraphMarkdownElement = {
-    content: (
-        | TextMarkdownElement
-        | LinkMarkdownElement
-        | ImageMarkdownElement
-    )[];
+    content: InlineMarkdownElement[];
 };
 
 export type HorizontalRuleMarkdownElement = "---";
