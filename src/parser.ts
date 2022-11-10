@@ -10,6 +10,7 @@ import {
     DefaultMarkdownElementsFactory,
     MarkdownElementsFactory,
 } from "./factory";
+import { ParserCombinator } from "./utils";
 
 const H1_REGEX = /(?<=(^#)\s).*/;
 const H2_REGEX = /(?<=(^##)\s).*/;
@@ -78,20 +79,17 @@ export class MarkdownParser<CreateType = MarkdownElement> {
 
     private parseParagraph(line: string) {
         const parts: InlineMarkdownElement[] = [];
-        line.split(" ").forEach((part) => {
-            if (BOLD_REGEX.test(part)) {
-                // TODO figure wat to parse bolds with spaces inside
-                // you can combine regexes with ()|() like: (\*\*([^\s]*?)\*\*)|(\*([^\s]*?)\*)|(\s+\[[^\]]*\]\((.*?)\s*("(?:.*[^"])")?\s*\))
-                // and collect space before and after the match "(?<=[_]).*(?=[\.])". Then do split
-                // https://www.regular-expressions.info/lookaround.html
-                // parts.push(this.factory.createTxt(this.parseBoldText(part)));
+        const splitExpr = ParserCombinator.from().bold().charsAround().build();
+
+        line.split(splitExpr).forEach((part) => {
+            if (ParserCombinator.from().bold().build().test(part)) {
                 parts.push(this.parseBoldText(part));
                 return;
             }
-            if (ITALIC_REGEX.test(part)) {
-                parts.push(this.parseItalicText(part));
-                return;
-            }
+            // if (ITALIC_REGEX.test(part)) {
+            //     parts.push(this.parseItalicText(part));
+            //     return;
+            // }
             if (part && part.trim().length > 0) {
                 const element: TextMarkdownElement = {
                     type: "normal",
