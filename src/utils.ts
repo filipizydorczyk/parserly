@@ -10,7 +10,7 @@ export class ParserCombinator {
     }
 
     public bold() {
-        this.regex = "\\*\\*[^s].*?[^s]\\*\\*";
+        this.regex = "\\*\\*[^\\s].*?[^\\s]\\*\\*";
         return this;
     }
 
