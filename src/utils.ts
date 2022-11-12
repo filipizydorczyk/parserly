@@ -5,7 +5,7 @@
  * `ParserCombinator.from().bold().fullWords().charsAround().build()` 
  */
 export class ParserCombinator {
-  protected regex: string;
+  private regex: string;
 
   /**
    * @returns `ParserCombinator` instance
