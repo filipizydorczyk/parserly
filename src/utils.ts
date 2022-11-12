@@ -23,12 +23,17 @@ export class ParserCombinator {
     }
 
     /**
-     * Creates string that mathces markdown bolds.
-     * This method will overwrite every previous action.
+     * Creates string that mathces markdown bolds
+     * and append this.
      * @returns current `ParserCombinator` insatnce
      */
     public bold() {
-        this.regex = "\\*\\*[^\\s].*?[^\\s]\\*\\*";
+        this.regex = `${this.regex}(?:\\*\\*[^\\s].*?[^\\s]\\*\\*)`;
+        return this;
+    }
+
+    public italic() {
+        this.regex = `${this.regex}(?:[^\\*]\\*[^\\s].*?[^\\s]\\*[^\\*])`;
         return this;
     }
 
