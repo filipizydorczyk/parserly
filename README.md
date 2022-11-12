@@ -7,7 +7,7 @@ So far these are elements that will be supported/are supported by the library. I
 | Element         | Markdown Syntax                                        | State |
 | --------------- | ------------------------------------------------------ | ----- |
 | Heading         | # H1, ## H2, ### H3                                    | ✅    |
-| Bold            | \*\*bold text\*\*                                      | ❌    |
+| Bold            | \*\*bold text\*\*                                      | ✅    |
 | Italic          | \*italicized text\*                                    | ❌    |
 | Blockquote      | > blockquote                                           | ✅    |
 | Ordered List    | 1. First item </br> 2. Second item </br> 3. Third item | ❌    |

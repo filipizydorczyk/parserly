@@ -1,24 +1,68 @@
+/**
+ * This class utility to create complex regexes from smaller ones.
+ * You start by calling static method `from` (constructor is private)
+ * and then chaining smaller regexes to create big one. For example
+ * `ParserCombinator.from().bold().fullWords().charsAround().build()` 
+ */
 export class ParserCombinator {
     private regex: string;
 
+    /**
+     * @returns `ParserCombinator` instance
+     */
     static from() {
         return new ParserCombinator("");
     }
 
+    /**
+     * Private constructor
+     * @param regex string to begin with
+     */
     private constructor(regex: string) {
         this.regex = regex;
     }
 
+    /**
+     * Creates string that mathces markdown bolds.
+     * This method will overwrite every previous action.
+     * @returns current `ParserCombinator` insatnce
+     */
     public bold() {
         this.regex = "\\*\\*[^\\s].*?[^\\s]\\*\\*";
         return this;
     }
 
+    /**
+     * Takes current regex and adds positive lookahed
+     * and lookbehind part.
+     * @returns current `ParserCombinator` insatnce
+     */
     public charsAround() {
         this.regex = `(?<=)(${this.regex})(?=)`;
         return this;
     }
 
+    /**
+     * Takes current regex and will make sure it will match
+     * full word or words. For example if we create regex
+     * `ParserCombinator.from().bold().build()` it will match
+     * `**dsasd dasda**` but also `dasdas**sads**dasdsa`.
+     * If we use this method on top of that
+     * (`ParserCombinator.from().bold().fullWords().build()`) it
+     * will not parse `dasdas**sads**dasdsa` anymore.
+     * It will work when there are spacec around, begind on the
+     * beginning of line, finishes with end of line, comma or dot.
+     * @returns current `ParserCombinator` insatnce
+     */
+    public fullWords() {
+        this.regex = `(?:^|\\s)(?:${this.regex})(?:$|\\s|\\.|\\,)`;
+        return this;
+    }
+
+    /**
+     * Takes current string and creates regex out of that
+     * @returns `RegExp`
+     */
     public build() {
         return new RegExp(this.regex);
     }
