@@ -7,9 +7,6 @@
 export class ParserCombinator {
   private regex: string;
 
-  /**
-   * @returns `ParserCombinator` instance
-   */
   static from() {
     return new ParserCombinator("");
   }
@@ -28,11 +25,6 @@ export class ParserCombinator {
     this.regex = regex;
   }
 
-  /**
-   * Creates string that mathces markdown bolds
-   * and append this.
-   * @returns current `ParserCombinator` insatnce
-   */
   public bold() {
     this.regex = `${this.regex}(?:\\*\\*[^\\s].*?[^\\s]\\*\\*)`;
     return this;
@@ -75,7 +67,8 @@ export class ParserCombinator {
   }
 
   /**
-   * Takes current string and creates regex out of that
+   * Takes current string and creates regex out of that.
+   * Should be used at the very end of parser bulding.
    * @returns `RegExp`
    */
   public build() {
