@@ -19,12 +19,6 @@ const HORIZONTAL_RULE_REGEX = /^(-|_){3,}$/;
 const QUOTE_REGEX = /(?<=(^>)\s).*/;
 const IMG_REGEX = /^!\[[^\]]*\]\((.*?)\s*("(?:.*[^"])")?\s*\)$/;
 
-const INLINE_IMG_REGEX = /\s+!\[[^\]]*\]\((.*?)\s*("(?:.*[^"])")?\s*\)/;
-const LINK_REGEX = /\s+\[[^\]]*\]\((.*?)\s*("(?:.*[^"])")?\s*\)/;
-const BOLD_REGEX = /^\*\*([^\s]*?)\*\*$/;
-const ITALIC_REGEX = /^\*([^\s]*?)\*$/;
-const CODE_REGEX = /\s+\`(.*)\`/;
-
 export class MarkdownParser<CreateType = MarkdownElement> {
     private factory: MarkdownElementsFactory<CreateType>;
 
@@ -79,17 +73,20 @@ export class MarkdownParser<CreateType = MarkdownElement> {
 
     private parseParagraph(line: string) {
         const parts: InlineMarkdownElement[] = [];
-        const splitExpr = ParserCombinator.from().bold().charsAround().build();
+        const splitExpr = ParserCombinator.or([
+            ParserCombinator.from().bold().charsAround(),
+            ParserCombinator.from().italic().charsAround(),
+        ]).build();
 
         line.split(splitExpr).forEach((part) => {
             if (ParserCombinator.from().bold().build().test(part)) {
                 parts.push(this.parseBoldText(part));
                 return;
             }
-            // if (ITALIC_REGEX.test(part)) {
-            //     parts.push(this.parseItalicText(part));
-            //     return;
-            // }
+            if (ParserCombinator.from().italic().build().test(part)) {
+                parts.push(this.parseItalicText(part));
+                return;
+            }
             if (part && part.trim().length > 0) {
                 const element: TextMarkdownElement = {
                     type: "normal",
