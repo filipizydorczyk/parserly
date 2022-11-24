@@ -13,7 +13,9 @@ describe("Paragraph.md", () => {
                 {
                     content: [
                         { type: "bold", content: "Lorem" },
-                        { type: "normal", content: "ipsum dolor sit amet," },
+                        { type: "normal", content: "ipsum" },
+                        { type: "code", content: "dolor" },
+                        { type: "normal", content: "sit amet," },
                         {
                             type: "bold",
                             content: "consectetur adipiscing elit",
@@ -24,25 +26,40 @@ describe("Paragraph.md", () => {
                                 ". Morbi vel tempor mi. Cras sit amet venenatis ipsum. Phasellus eu nisl ut magna gravida interdum quis ac elit.",
                         },
                         { type: "italic", content: "Curabitur" },
-                        { type: "normal", content: "pellentesque" },
+                        { type: "normal", content: "pellen" },
+                        { type: "code", content: "te" },
+                        { type: "normal", content: "sque" },
                         { type: "bold", content: "ipsum sed ante vulputate" },
+                        { type: "normal", content: ", quis dapibus mauris" },
                         {
-                            type: "normal",
-                            content: ", quis dapibus mauris lacinia. Sed et n",
+                            alt: "",
+                            url: new URL(
+                                "https://images.news18.com/ibnlive/uploads/2021/12/spiderman-meme-16401651614x3.png"
+                            ),
                         },
+                        { type: "normal", content: "lacinia. Sed et n" },
                         { type: "bold", content: "un" },
                         { type: "normal", content: "c eget" },
                         { type: "bold", content: "tellus consequat iaculis" },
+                        { type: "normal", content: "in ac od" },
+                        {
+                            alt: "example",
+                            url: new URL(
+                                "https://images.news18.com/ibnlive/uploads/2021/12/spiderman-meme-16401651614x3.png"
+                            ),
+                        },
                         {
                             type: "normal",
                             content:
-                                "in ac odio. Aliquam non rhoncus libero, non commodo ligula. Vestibulum nec",
+                                "io. Aliquam non rhoncus libero, non commodo ligula. Vestibulum nec",
                         },
                         { type: "italic", content: "hendrerit felis" },
+                        { type: "normal", content: ". Aenean" },
+                        { type: "code", content: "sem dolor, semper" },
                         {
                             type: "normal",
                             content:
-                                ". Aenean sem dolor, semper vitae vehicula vestibulum, suscipit eget ex. Morbi interdum, massa ut cursus vestibulum, nisl justo varius massa, eget tincidunt nisi leo a sapien. Suspe",
+                                "vitae vehicula vestibulum, suscipit eget ex. Morbi interdum, massa ut cursus vestibulum, nisl justo varius massa, eget tincidunt nisi leo a sapien. Suspe",
                         },
                         { type: "italic", content: "ndi" },
                         {

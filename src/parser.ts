@@ -1,9 +1,7 @@
 import {
     ImageMarkdownElement,
     InlineMarkdownElement,
-    LinkMarkdownElement,
     MarkdownElement,
-    ParagraphMarkdownElement,
     TextMarkdownElement,
 } from "./element";
 import {
@@ -76,6 +74,8 @@ export class MarkdownParser<CreateType = MarkdownElement> {
         const splitExpr = ParserCombinator.or([
             ParserCombinator.from().bold().charsAround(),
             ParserCombinator.from().italic().charsAround(),
+            ParserCombinator.from().code().charsAround(),
+            ParserCombinator.from().img().charsAround(),
         ]).build();
 
         line.split(splitExpr).forEach((part) => {
@@ -85,6 +85,14 @@ export class MarkdownParser<CreateType = MarkdownElement> {
             }
             if (ParserCombinator.from().italic().build().test(part)) {
                 parts.push(this.parseItalicText(part));
+                return;
+            }
+            if (ParserCombinator.from().code().build().test(part)) {
+                parts.push(this.parseCode(part));
+                return;
+            }
+            if (ParserCombinator.from().img().build().test(part)) {
+                parts.push(this.parseImg(part));
                 return;
             }
             if (part && part.trim().length > 0) {
@@ -98,6 +106,14 @@ export class MarkdownParser<CreateType = MarkdownElement> {
         });
 
         return { content: parts };
+    }
+    parseCode(part: string): InlineMarkdownElement {
+        const element: TextMarkdownElement = {
+            type: "code",
+            content: part.replace(/^\`/, "").replace(/\`$/, ""),
+        };
+
+        return element;
     }
 
     private parseBoldText(word: string) {

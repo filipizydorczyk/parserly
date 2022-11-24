@@ -1,2 +1,3 @@
--   firgure italic regeax
--   figrure api for `ParserCombinator` to do `or`/`and` commands
+-   make bold italic and code working with and with no spaces
+-   refactor parser
+-   add usage for `\` to disable parsing characterts

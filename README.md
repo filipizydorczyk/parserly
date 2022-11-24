@@ -12,7 +12,7 @@ So far these are elements that will be supported/are supported by the library. I
 | Blockquote      | > blockquote                                           | ✅    |
 | Ordered List    | 1. First item </br> 2. Second item </br> 3. Third item | ❌    |
 | Unordered List  | - First item </br> - Second item </br> - Third item    | ❌    |
-| Code            | \`code\`                                               | ❌    |
+| Code            | \`code\`                                               | ✅    |
 | Horizontal Rule | ---                                                    | ✅    |
 | Link Rule       | \[title](https://www.example.com)                      | ❌    |
-| Image           | \!\[alt text](image.jpg)                               | ❌    |
+| Image           | \!\[alt text](image.jpg)                               | ✅    |

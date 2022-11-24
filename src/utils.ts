@@ -37,6 +37,16 @@ export class ParserCombinator {
         return this;
     }
 
+    public code() {
+        this.regex = `${this.regex}\`.*?\``;
+        return this;
+    }
+
+    public img() {
+        this.regex = `${this.regex}!\\[[^\\]]*\\]\\((?:.*?)\\s*(?:"(?:.*[^"])")?\\s*\\)`;
+        return this;
+    }
+
     /**
      * Takes current regex and adds positive lookahed
      * and lookbehind part.
