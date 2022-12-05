@@ -14,5 +14,5 @@ So far these are elements that will be supported/are supported by the library. I
 | Unordered List  | - First item </br> - Second item </br> - Third item    | ❌    |
 | Code            | \`code\`                                               | ✅    |
 | Horizontal Rule | ---                                                    | ✅    |
-| Link Rule       | \[title](https://www.example.com)                      | ❌    |
+| Link Rule       | \[title](https://www.example.com)                      | ✅    |
 | Image           | \!\[alt text](image.jpg)                               | ✅    |

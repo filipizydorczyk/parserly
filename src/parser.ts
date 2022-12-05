@@ -34,7 +34,7 @@ export class MarkdownParser<CreateType = MarkdownElement> {
     public parse(markdown: string) {
         const response: CreateType[] = [];
 
-        markdown.split("\n").forEach((line) => {
+        markdown.split(ParserCombinator.from().lineEnd().build()).forEach((line) => {
             if (H1_REGEX.test(line)) {
                 response.push(this.parseHeader("h1", line));
                 return;
@@ -57,6 +57,10 @@ export class MarkdownParser<CreateType = MarkdownElement> {
             }
             if (IMG_REGEX.test(line.trim())) {
                 response.push(this.factory.createImg(this.parseImg(line)));
+                return;
+            }
+            if (ParserCombinator.from().url().lineWrap().build().test(line.trim())) {
+                response.push(this.factory.createLink(this.parseUrl(line.trim())));
                 return;
             }
             if (line && line.trim().length > 0) {
@@ -158,7 +162,7 @@ export class MarkdownParser<CreateType = MarkdownElement> {
         return element;
     }
 
-    private parseUrl(part: string): InlineMarkdownElement {
+    private parseUrl(part: string) {
         const titleRegex = /(?<=\[)[^\]]+/;
         const srcRegex = /(?<=\()[^\)]+/;
 

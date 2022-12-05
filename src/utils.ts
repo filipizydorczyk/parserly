@@ -27,6 +27,16 @@ export class ParserCombinator {
         this.regex = regex;
     }
 
+    public lineEnd(){
+        this.regex = `${this.regex}\\n`;
+        return this;
+    }
+
+    public lineWrap(){
+        this.regex = `^${this.regex}$`;
+        return this;
+    }
+
     public bold() {
         this.regex = `${this.regex}(?:\\*\\*[^\\s].*?[^\\s]\\*\\*)`;
         return this;
