@@ -1,6 +1,7 @@
 import {
     ImageMarkdownElement,
     InlineMarkdownElement,
+    LinkMarkdownElement,
     MarkdownElement,
     TextMarkdownElement,
 } from "./element";
@@ -76,6 +77,7 @@ export class MarkdownParser<CreateType = MarkdownElement> {
             ParserCombinator.from().italic().charsAround(),
             ParserCombinator.from().code().charsAround(),
             ParserCombinator.from().img().charsAround(),
+            ParserCombinator.from().url().charsAround()
         ]).build();
 
         line.split(splitExpr).forEach((part) => {
@@ -95,10 +97,14 @@ export class MarkdownParser<CreateType = MarkdownElement> {
                 parts.push(this.parseImg(part));
                 return;
             }
+            if (ParserCombinator.from().url().build().test(part)) {
+                parts.push(this.parseUrl(part));
+                return;
+            }
             if (part && part.trim().length > 0) {
                 const element: TextMarkdownElement = {
                     type: "normal",
-                    content: part.trim(),
+                    content: part.trim(), // TODO consider removing tream so that spaces are correct in cases like `dasf**fdsf**fsdf **dasd**`
                 };
                 parts.push(element);
                 return;
@@ -107,7 +113,8 @@ export class MarkdownParser<CreateType = MarkdownElement> {
 
         return { content: parts };
     }
-    parseCode(part: string): InlineMarkdownElement {
+
+    private parseCode(part: string): InlineMarkdownElement {
         const element: TextMarkdownElement = {
             type: "code",
             content: part.replace(/^\`/, "").replace(/\`$/, ""),
@@ -145,6 +152,21 @@ export class MarkdownParser<CreateType = MarkdownElement> {
 
         const element: ImageMarkdownElement = {
             alt: altText,
+            url: new URL(src),
+        };
+
+        return element;
+    }
+
+    private parseUrl(part: string): InlineMarkdownElement {
+        const titleRegex = /(?<=\[)[^\]]+/;
+        const srcRegex = /(?<=\()[^\)]+/;
+
+        const title = titleRegex.exec(part)?.[0]?.trim() || "";
+        const src = srcRegex.exec(part)?.[0]?.trim() || "";
+        
+        const element: LinkMarkdownElement = {
+            title,
             url: new URL(src),
         };
 

@@ -47,6 +47,12 @@ export class ParserCombinator {
         return this;
     }
 
+    public url() {
+        this.regex = `${this.regex}\\[[^\\]]*\\]\\((?:.*?)\\s*(?:"(?:.*[^"])")?\\s*\\)`;
+        return this;
+    }
+
+
     /**
      * Takes current regex and adds positive lookahed
      * and lookbehind part.
