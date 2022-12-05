@@ -11,13 +11,6 @@ import {
 } from "./factory";
 import { ParserCombinator } from "./utils";
 
-const H1_REGEX = /(?<=(^#)\s).*/;
-const H2_REGEX = /(?<=(^##)\s).*/;
-const H3_REGEX = /(?<=(^###)\s).*/;
-const HORIZONTAL_RULE_REGEX = /^(-|_){3,}$/;
-const QUOTE_REGEX = /(?<=(^>)\s).*/;
-const IMG_REGEX = /^!\[[^\]]*\]\((.*?)\s*("(?:.*[^"])")?\s*\)$/;
-
 export class MarkdownParser<CreateType = MarkdownElement> {
     private factory: MarkdownElementsFactory<CreateType>;
 
@@ -35,27 +28,27 @@ export class MarkdownParser<CreateType = MarkdownElement> {
         const response: CreateType[] = [];
 
         markdown.split(ParserCombinator.from().lineEnd().build()).forEach((line) => {
-            if (H1_REGEX.test(line)) {
+            if (ParserCombinator.from().h1().build().test(line)) {
                 response.push(this.parseHeader("h1", line));
                 return;
             }
-            if (H2_REGEX.test(line)) {
+            if (ParserCombinator.from().h2().build().test(line)) {
                 response.push(this.parseHeader("h2", line));
                 return;
             }
-            if (H3_REGEX.test(line)) {
+            if (ParserCombinator.from().h3().build().test(line)) {
                 response.push(this.parseHeader("h3", line));
                 return;
             }
-            if (HORIZONTAL_RULE_REGEX.test(line)) {
+            if (ParserCombinator.from().horizontalRule().build().test(line)) {
                 response.push(this.factory.createHRule("---"));
                 return;
             }
-            if (QUOTE_REGEX.test(line)) {
+            if (ParserCombinator.from().quote().build().test(line)) {
                 response.push(this.parseQuote(line));
                 return;
             }
-            if (IMG_REGEX.test(line.trim())) {
+            if (ParserCombinator.from().img().lineWrap().build().test(line.trim())) {
                 response.push(this.factory.createImg(this.parseImg(line)));
                 return;
             }

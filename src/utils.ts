@@ -27,13 +27,38 @@ export class ParserCombinator {
         this.regex = regex;
     }
 
-    public lineEnd(){
+    public lineEnd() {
         this.regex = `${this.regex}\\n`;
         return this;
     }
 
-    public lineWrap(){
+    public lineWrap() {
         this.regex = `^${this.regex}$`;
+        return this;
+    }
+
+    public h1() {
+        this.regex = `${this.regex}(?<=(^#)\\s).*`;
+        return this;
+    }
+
+    public h2() {
+        this.regex = `${this.regex}(?<=(^##)\\s).*`;
+        return this;
+    }
+
+    public h3() {
+        this.regex = `${this.regex}(?<=(^###)\\s).*`;
+        return this;
+    }
+
+    public horizontalRule() {
+        this.regex = `${this.regex}^(-|_){3,}$`;
+        return this;
+    }
+
+    public quote() {
+        this.regex = `${this.regex}(?<=(^>)\\s).*`;
         return this;
     }
 
