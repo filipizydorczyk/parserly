@@ -9,7 +9,7 @@ import {
     DefaultMarkdownElementsFactory,
     MarkdownElementsFactory,
 } from "./factory";
-import { ParserCombinator } from "./utils";
+import { ParserCombinator, MarkdownRegex } from "./utils";
 
 export class MarkdownParser<CreateType = MarkdownElement> {
     private factory: MarkdownElementsFactory<CreateType>;
@@ -27,33 +27,34 @@ export class MarkdownParser<CreateType = MarkdownElement> {
     public parse(markdown: string) {
         const response: CreateType[] = [];
 
-        markdown.split(ParserCombinator.from().lineEnd().build()).forEach((line) => {
-            if (ParserCombinator.from().h1().build().test(line)) {
+        markdown.split(MarkdownRegex.LINE_SPLIT).forEach((line) => {
+            if (MarkdownRegex.LINE_H1.test(line)) {
                 response.push(this.parseHeader("h1", line));
                 return;
             }
-            if (ParserCombinator.from().h2().build().test(line)) {
+            if (MarkdownRegex.LINE_H2.test(line)) {
                 response.push(this.parseHeader("h2", line));
                 return;
             }
-            if (ParserCombinator.from().h3().build().test(line)) {
+            if (MarkdownRegex.LINE_H3.test(line)) {
                 response.push(this.parseHeader("h3", line));
                 return;
             }
-            if (ParserCombinator.from().horizontalRule().build().test(line)) {
+            if (MarkdownRegex.LINE_H_RULE.test(line)) {
                 response.push(this.factory.createHRule("---"));
                 return;
             }
-            if (ParserCombinator.from().quote().build().test(line)) {
+            if (MarkdownRegex.LINE_QUOTE.test(line)) {
                 response.push(this.parseQuote(line));
                 return;
             }
-            if (ParserCombinator.from().img().lineWrap().build().test(line.trim())) {
+            if (MarkdownRegex.LINE_IMG.test(line.trim())) {
                 response.push(this.factory.createImg(this.parseImg(line)));
                 return;
             }
-            if (ParserCombinator.from().url().lineWrap().build().test(line.trim())) {
-                response.push(this.factory.createLink(this.parseUrl(line.trim())));
+            if (MarkdownRegex.LINE_URL.test(line.trim())) {
+                const trimed = line.trim();
+                response.push(this.factory.createLink(this.parseUrl(trimed)));
                 return;
             }
             if (line && line.trim().length > 0) {
@@ -69,32 +70,25 @@ export class MarkdownParser<CreateType = MarkdownElement> {
 
     private parseParagraph(line: string) {
         const parts: InlineMarkdownElement[] = [];
-        const splitExpr = ParserCombinator.or([
-            ParserCombinator.from().bold().charsAround(),
-            ParserCombinator.from().italic().charsAround(),
-            ParserCombinator.from().code().charsAround(),
-            ParserCombinator.from().img().charsAround(),
-            ParserCombinator.from().url().charsAround()
-        ]).build();
 
-        line.split(splitExpr).forEach((part) => {
-            if (ParserCombinator.from().bold().build().test(part)) {
+        line.split(MarkdownRegex.PARAGRAPH_SPLIT).forEach((part) => {
+            if (MarkdownRegex.PARAGRAPH_BOLD.test(part)) {
                 parts.push(this.parseBoldText(part));
                 return;
             }
-            if (ParserCombinator.from().italic().build().test(part)) {
+            if (MarkdownRegex.PARAGRAPH_ITALIC.test(part)) {
                 parts.push(this.parseItalicText(part));
                 return;
             }
-            if (ParserCombinator.from().code().build().test(part)) {
+            if (MarkdownRegex.PARAGRAPH_CODE.build().test(part)) {
                 parts.push(this.parseCode(part));
                 return;
             }
-            if (ParserCombinator.from().img().build().test(part)) {
+            if (MarkdownRegex.PARAGRAPH_IMG.test(part)) {
                 parts.push(this.parseImg(part));
                 return;
             }
-            if (ParserCombinator.from().url().build().test(part)) {
+            if (MarkdownRegex.PARAGRAPH_URL.test(part)) {
                 parts.push(this.parseUrl(part));
                 return;
             }
@@ -161,7 +155,7 @@ export class MarkdownParser<CreateType = MarkdownElement> {
 
         const title = titleRegex.exec(part)?.[0]?.trim() || "";
         const src = srcRegex.exec(part)?.[0]?.trim() || "";
-        
+
         const element: LinkMarkdownElement = {
             title,
             url: new URL(src),

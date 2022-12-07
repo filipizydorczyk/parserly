@@ -87,7 +87,6 @@ export class ParserCombinator {
         return this;
     }
 
-
     /**
      * Takes current regex and adds positive lookahed
      * and lookbehind part.
@@ -128,3 +127,27 @@ export class ParserCombinator {
         return new RegExp(this.regex);
     }
 }
+
+export const MarkdownRegex = {
+    LINE_SPLIT: ParserCombinator.from().lineEnd().build(),
+    PARAGRAPH_SPLIT: ParserCombinator.or([
+        ParserCombinator.from().bold().charsAround(),
+        ParserCombinator.from().italic().charsAround(),
+        ParserCombinator.from().code().charsAround(),
+        ParserCombinator.from().img().charsAround(),
+        ParserCombinator.from().url().charsAround(),
+    ]).build(),
+
+    LINE_H1: ParserCombinator.from().h1().build(),
+    LINE_H2: ParserCombinator.from().h2().build(),
+    LINE_H3: ParserCombinator.from().h3().build(),
+    LINE_H_RULE: ParserCombinator.from().horizontalRule().build(),
+    LINE_QUOTE: ParserCombinator.from().quote().build(),
+    LINE_IMG: ParserCombinator.from().img().lineWrap().build(),
+    LINE_URL: ParserCombinator.from().url().lineWrap().build(),
+    PARAGRAPH_BOLD: ParserCombinator.from().bold().build(),
+    PARAGRAPH_ITALIC: ParserCombinator.from().italic().build(),
+    PARAGRAPH_CODE: ParserCombinator.from().code(),
+    PARAGRAPH_IMG: ParserCombinator.from().img().build(),
+    PARAGRAPH_URL: ParserCombinator.from().url().build(),
+};
