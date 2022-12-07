@@ -9,7 +9,7 @@ import {
     DefaultMarkdownElementsFactory,
     MarkdownElementsFactory,
 } from "./factory";
-import { ParserCombinator, MarkdownRegex } from "./utils";
+import { MarkdownRegex } from "./utils";
 
 export class MarkdownParser<CreateType = MarkdownElement> {
     private factory: MarkdownElementsFactory<CreateType>;

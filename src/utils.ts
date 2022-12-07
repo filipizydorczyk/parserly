@@ -128,6 +128,16 @@ export class ParserCombinator {
     }
 }
 
+/**
+ * Collections of constants containging regexes to split and parse
+ * markdown elements.
+ *
+ * Whenever adding new const to this collection follow this pattern
+ * <TARGET>_<ACTION> where
+ *  - `<TARGET>` can be either `LINE` or `PARAGRAPH`
+ *  - `<ACTION>` means if its a split action or which element regex
+ * is parsing
+ */
 export const MarkdownRegex = {
     LINE_SPLIT: ParserCombinator.from().lineEnd().build(),
     PARAGRAPH_SPLIT: ParserCombinator.or([
