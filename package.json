@@ -2,8 +2,10 @@
     "name": "parserly",
     "version": "1.0.0",
     "description": "Library to parse Markdown documents into javascript objects",
-    "main": "index.js",
+    "main": "./lib/src/main.js",
+    "types": "./@types/src/main.d.ts",
     "scripts": {
+        "build": "rm -rf ./lib && tsc",
         "test": "mocha -r ts-node/register './test/**/*.test.ts'"
     },
     "keywords": [
