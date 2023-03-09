@@ -1,3 +1,7 @@
+This project is not maintained anymore. I started doing that not knowing of existing solutions like [commonmark](https://www.npmjs.com/package/commonmark). I may unarchive this repo someday if I think of something new I could bring to the table with this project but at the moment its done and it was cool learning oportuninty/poc. You can see how it was suppesed to be used in this [repo](https://github.com/filipizydorczyk/poc-parserly-editor).
+
+---
+
 # Parserly
 
 This library is suppose to be parsing markdown to javascript object so that you can have claen API to do whatever you want with your markdown files. By default it will return predfined by library types but there is a possibility to write own factory that will return types defined by you instead. More on it in a future.
